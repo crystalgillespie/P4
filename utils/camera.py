@@ -26,11 +26,22 @@ class CameraHandler():
     self.picam2.preview_configuration.align()
     self.picam2.preview_configuration.transform = Transform(vflip=True, hflip=True) 
     self.picam2.configure("preview")
+
+
     self.picam2.start()
 
     self.latest_img = None
     self.poster_cordinates = None
     self.count = 0
+    try:
+      sensor_size = self.picam2.camera_properties['PixelArraySize']
+
+
+      self.picam2.set_controls({"ScalerCrop": (0, 0, sensor_size[0], sensor_size[1])})
+    except (KeyError, AttributeError):
+
+      pass
+
 
     # Create the output directory, if it does not exist.
     os.makedirs(OUT_PATH, exist_ok=True)
